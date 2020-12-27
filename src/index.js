@@ -1,5 +1,6 @@
 import React from 'react';
 import {render, Text } from './renderer';
+// import ReactDom from 'react-dom';
 
 class App extends React.Component {
 //   state = {

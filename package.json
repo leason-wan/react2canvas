@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "fbjs": "1.0.0",
     "react": "16.7.0",
     "react-dom": "16.7.0",
     "react-reconciler": "0.23.0",
