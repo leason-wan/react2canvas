@@ -8,14 +8,13 @@ const hostConfig = {
   getRootHostContext: (instence) => {
     return getHostContextNode(instence);
   },
-  prepareForCommit: () => {},
-  resetAfterCommit: () => {},
   getChildHostContext: () => {
     return childHostContext;
   },
   shouldSetTextContent: (type, props) => {
     return false;
   },
+  supportsMutation: true,
   // React.createElement
   createInstance: (
     type,
@@ -28,8 +27,8 @@ const hostConfig = {
     return rootContainerInstance;
   },
   createTextInstance: (text) => {},
-  appendInitialChild: (parent, child) => {},
   // componentDidMount
+  appendInitialChild: (parent, child) => {},
   appendChild(parent, child) {},
   appendAllChildren() {},
   finalizeInitialChildren: (domElement, type, props) => {},
@@ -37,8 +36,9 @@ const hostConfig = {
   prepareUpdate(domElement, oldProps, newProps) {
     return true;
   },
-  supportsMutation: true,
   // componentsDidUpdate
+  prepareForCommit: () => {},
+  resetAfterCommit: () => {},
   commitUpdate(canvasElement, updatePayload, type, oldProps, newProps) {},
   commitTextUpdate(textInstance, oldText, newText) {},
   // componentWillUnmount

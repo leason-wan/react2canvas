@@ -1,15 +1,13 @@
 import ReactReconciler from "react-reconciler";
 
-const rootHostContext = {};
-const childHostContext = {};
+const rootHostContext = {}; // 根节点的上下文
+const childHostContext = {}; /// 子节点的上下文
 
 const hostConfig = {
   now: Date.now,
   getRootHostContext: () => {
     return rootHostContext;
   },
-  prepareForCommit: () => {},
-  resetAfterCommit: () => {},
   getChildHostContext: () => {
     return childHostContext;
   },
@@ -18,9 +16,9 @@ const hostConfig = {
       typeof props.children === "string" || typeof props.children === "number"
     );
   },
-  /**
-   This is where react-reconciler wants to create an instance of UI element in terms of the target. Since our target here is the DOM, we will create document.createElement and type is the argument that contains the type string like div or img or h1 etc. The initial values of domElement attributes can be set in this function from the newProps argument
-   */
+  supportsMutation: true,
+  // React.createElement()
+  // React.createElement('div', {}) <div className='red' />
   createInstance: (
     type,
     newProps,
@@ -36,7 +34,6 @@ const hostConfig = {
           domElement.textContent = propValue;
         }
       } else if (propName === "onClick") {
-        // console.log('click prop', propValue);
         domElement.addEventListener("click", propValue);
       } else if (propName === "className") {
         domElement.setAttribute("class", propValue);
@@ -50,6 +47,7 @@ const hostConfig = {
   createTextInstance: (text) => {
     return document.createTextNode(text);
   },
+  // componentDidMount
   appendInitialChild: (parent, child) => {
     parent.appendChild(child);
   },
@@ -57,13 +55,16 @@ const hostConfig = {
     parent.appendChild(child);
   },
   finalizeInitialChildren: (domElement, type, props) => {},
-  supportsMutation: true,
+  
   appendChildToContainer: (parent, child) => {
     parent.appendChild(child);
   },
   prepareUpdate(domElement, oldProps, newProps) {
     return true;
   },
+  // componentsDidUpdate
+  prepareForCommit: () => {},
+  resetAfterCommit: () => {},
   commitUpdate(domElement, updatePayload, type, oldProps, newProps) {
     Object.keys(newProps).forEach((propName) => {
       const propValue = newProps[propName];
@@ -71,6 +72,8 @@ const hostConfig = {
         if (typeof propValue === "string" || typeof propValue === "number") {
           domElement.textContent = propValue;
         }
+      } else if (propName === "className") {
+        domElement.setAttribute("class", propValue);
       } else {
         const propValue = newProps[propName];
         domElement.setAttribute(propName, propValue);
@@ -87,8 +90,7 @@ const hostConfig = {
 
 const ReactReconcilerInst = ReactReconciler(hostConfig);
 export const render = (reactElement, domElement, callback) => {
-  // console.log(arguments);
-  // Create a root Container if it doesnt exist
+  // 全局渲染器的单例
   if (!domElement._rootContainer) {
     domElement._rootContainer = ReactReconcilerInst.createContainer(
       domElement,
