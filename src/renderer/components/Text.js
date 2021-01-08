@@ -1,10 +1,13 @@
 export function createText(root, newProps) {
-	root.font = "48px serif";
 	Object.keys(newProps).forEach(propName => {
 		const propValue = newProps[propName];
 		if (propName === 'children') {
 			if (typeof propValue === 'string' || typeof propValue === 'number') {
-				root.strokeText(propValue, 10, 50);
+				const fontSize = newProps.size || '48px';
+				const left = newProps.left || 50;
+				const top = newProps.top || 50;
+				root.font = `${fontSize} serif`;
+				root.strokeText(propValue, left, top);
 			}
 		}
 	});

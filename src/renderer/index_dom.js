@@ -14,24 +14,32 @@ const hostConfig = {
     return childHostContext;
   },
   shouldSetTextContent: (type, props) => {
-    return typeof props.children === 'string' || typeof props.children === 'number';
+    return (
+      typeof props.children === "string" || typeof props.children === "number"
+    );
   },
   /**
    This is where react-reconciler wants to create an instance of UI element in terms of the target. Since our target here is the DOM, we will create document.createElement and type is the argument that contains the type string like div or img or h1 etc. The initial values of domElement attributes can be set in this function from the newProps argument
    */
-  createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
+  createInstance: (
+    type,
+    newProps,
+    rootContainerInstance,
+    _currentHostContext,
+    workInProgress
+  ) => {
     const domElement = document.createElement(type);
-    Object.keys(newProps).forEach(propName => {
+    Object.keys(newProps).forEach((propName) => {
       const propValue = newProps[propName];
-      if (propName === 'children') {
-        if (typeof propValue === 'string' || typeof propValue === 'number') {
+      if (propName === "children") {
+        if (typeof propValue === "string" || typeof propValue === "number") {
           domElement.textContent = propValue;
         }
-      } else if (propName === 'onClick') {
+      } else if (propName === "onClick") {
         // console.log('click prop', propValue);
-        domElement.addEventListener('click', propValue);
-      } else if (propName === 'className') {
-        domElement.setAttribute('class', propValue);
+        domElement.addEventListener("click", propValue);
+      } else if (propName === "className") {
+        domElement.setAttribute("class", propValue);
       } else {
         const propValue = newProps[propName];
         domElement.setAttribute(propName, propValue);
@@ -39,7 +47,7 @@ const hostConfig = {
     });
     return domElement;
   },
-  createTextInstance: text => {
+  createTextInstance: (text) => {
     return document.createTextNode(text);
   },
   appendInitialChild: (parent, child) => {
@@ -57,10 +65,10 @@ const hostConfig = {
     return true;
   },
   commitUpdate(domElement, updatePayload, type, oldProps, newProps) {
-    Object.keys(newProps).forEach(propName => {
+    Object.keys(newProps).forEach((propName) => {
       const propValue = newProps[propName];
-      if (propName === 'children') {
-        if (typeof propValue === 'string' || typeof propValue === 'number') {
+      if (propName === "children") {
+        if (typeof propValue === "string" || typeof propValue === "number") {
           domElement.textContent = propValue;
         }
       } else {
@@ -74,27 +82,25 @@ const hostConfig = {
   },
   removeChild(parentInstance, child) {
     parentInstance.removeChild(child);
-  }
+  },
 };
 
 const ReactReconcilerInst = ReactReconciler(hostConfig);
-export default {
-  render: (reactElement, domElement, callback) => {
-    // console.log(arguments);
-    // Create a root Container if it doesnt exist
-    if (!domElement._rootContainer) {
-      domElement._rootContainer = ReactReconcilerInst.createContainer(
-        domElement,
-        false
-      );
-    }
-
-    // update the root Container
-    return ReactReconcilerInst.updateContainer(
-      reactElement,
-      domElement._rootContainer,
-      null,
-      callback
+export const render = (reactElement, domElement, callback) => {
+  // console.log(arguments);
+  // Create a root Container if it doesnt exist
+  if (!domElement._rootContainer) {
+    domElement._rootContainer = ReactReconcilerInst.createContainer(
+      domElement,
+      false
     );
-  },
+  }
+
+  // update the root Container
+  return ReactReconcilerInst.updateContainer(
+    reactElement,
+    domElement._rootContainer,
+    null,
+    callback
+  );
 };
